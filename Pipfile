@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+XlsxWriter = "==3.0.3"
+python-dotenv = "==0.19.2"
+
+# Dependencies from VCS through ssh/https
+logsvc = {editable = true, ref = "v0.1.0", git = "https://github.com/andalexo/pylogsvc.git"}
+
+[dev-packages]
+pylint = "*"
+
+[requires]
+python_version = "3.9"

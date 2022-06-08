@@ -1,0 +1,9 @@
+####### model-echelon requirements.txt #######
+#
+###### Requirements with Version Specifiers ######
+#   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
+XlsxWriter==3.0.3
+python-dotenv==0.19.2
+#
+###### Version Control ######
+git+https://github.com/andalexo/pylogsvc.git@v0.1.0#egg=logsvc
