@@ -41,10 +41,8 @@ def main():
     parser.add_argument('--env', action='store_true', default=False,
                         help='Use .env file (dev)')
 
-    parser.add_argument('fin', type=lambda x: strdir(x), default=None,
+    parser.add_argument('simkey', type=lambda x: strdir(x), default=None,
                         help='Input directories')
-    parser.add_argument('fout', type=lambda x: strdir(x), default=None,
-                        help='Outputs')
 
     args = parser.parse_args(argv[1:])
 
@@ -57,7 +55,7 @@ def main():
         load_dotenv()
 
     mean_activity, stock = 0, 0
-    with open(args.fin) as fpin:
+    with open(f"data/{args.simKey}/outputs/output.csv") as fpin:
         rdr = reader(fpin, delimiter=';')
         next(rdr)
         data = next(rdr)
@@ -68,10 +66,10 @@ def main():
 
     data = {}
 
-    with open(args.fout) as fpout:
+    with open(f"data/{args.simKey}/inputs/vehicles.json") as fpout:
         data = load(fpout)
 
-    with open(args.fout, 'wb') as fpout:
+    with open(f"data/{args.simKey}/inputs/vehicles.json", 'wb') as fpout:
         data[0]["MEAN_ACTIVITY"] = mean_activity
         data[0]["STOCK"] = stock
         dump(data, fpout)
