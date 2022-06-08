@@ -1,0 +1,95 @@
+{
+    "name": "echelon to copert",
+    "description":"Connector",
+    "version": "0.0.1",
+    "status":"draft",
+    "types": [
+        {"name": "ANALYTICAL", "description":"Analytical model"}
+    ],
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-to-copert-connector:latest",
+    "url": "https://github.com/Horizon-LEAD/echelon-to-copert-connector",
+    "modelData":  [
+        {
+            "name": "echelonOut",
+            "variableName": "echelonOut",
+            "description": "echelonOut",
+            "isOutput": false,
+            "isOutputDir": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "csv",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "vehicles",
+            "variableName": "vehicles",
+            "description": "List of vehicles",
+            "isOutput": false,
+            "isOutputDir": false,
+            "isOptional": false,
+            "inputType": "CLI",
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "json",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "results",
+            "variableName": "output",
+            "description": "Results",
+            "isOutput": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "json",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
+                "objectKeys": []
+            },
+            "fromRow": null,
+            "toRow": null,
+            "column": null,
+            "refModelData": null,
+            "jsonPath": null,
+            "sheet": null,
+            "delimiter": null,
+            "qualifier": null,
+            "dateFormat": null
+        }
+    ]
+}
