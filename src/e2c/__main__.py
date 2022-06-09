@@ -2,7 +2,7 @@
 """
 
 from sys import argv
-from os.path import exists
+from os.path import exists, dirname, join
 from csv import reader
 from json import load, dump
 from argparse import (ArgumentParser, RawTextHelpFormatter,
@@ -41,8 +41,10 @@ def main():
     parser.add_argument('--env', action='store_true', default=False,
                         help='Use .env file (dev)')
 
-    parser.add_argument('simkey', type=lambda x: strdir(x), default=None,
-                        help='Input directories')
+    parser.add_argument('directory', type=lambda x: strdir(x), default=None,
+                        help='Main directory')
+    parser.add_argument('fin', type=lambda x: strdir(x), default=None,
+                        help='Input vehicles file for COPERT')
 
     args = parser.parse_args(argv[1:])
 
@@ -55,7 +57,7 @@ def main():
         load_dotenv()
 
     mean_activity, stock = 0, 0
-    with open(f"data/{args.simKey}/outputs/output.csv") as fpin:
+    with open(join(args.directory, "output.csv")) as fpin:
         rdr = reader(fpin, delimiter=';')
         next(rdr)
         data = next(rdr)
@@ -65,11 +67,10 @@ def main():
     logger.debug("mean activity: %s, stock: %s", mean_activity, stock)
 
     data = {}
-
-    with open(f"data/{args.simKey}/inputs/vehicles.json") as fpout:
+    with open(args.fin) as fpout:
         data = load(fpout)
 
-    with open(f"data/{args.simKey}/inputs/vehicles.json", 'wb') as fpout:
+    with open(args.fin, 'w') as fpout:
         data[0]["MEAN_ACTIVITY"] = mean_activity
         data[0]["STOCK"] = stock
         dump(data, fpout)

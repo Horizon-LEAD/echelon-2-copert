@@ -10,19 +10,19 @@
     "url": "https://github.com/Horizon-LEAD/echelon-to-copert-connector",
     "modelData":  [
         {
-            "name": "echelonOut",
-            "variableName": "echelonOut",
-            "description": "echelonOut",
+            "name": "directory",
+            "variableName": "directory",
+            "description": "simulation directory",
             "isOutput": false,
-            "isOutputDir": false,
+            "isOutputDir": true,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
             "modelDataType": {
-                "name": "file",
+                "name": "string",
                 "description": "",
-                "dataType": "file",
-                "extension": "csv",
+                "dataType": "string",
+                "extension": null,
                 "validators": [
                     {
                         "name": "required",
@@ -37,7 +37,7 @@
         {
             "name": "vehicles",
             "variableName": "vehicles",
-            "description": "List of vehicles",
+            "description": "vehicles input file - same as COPERT",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -58,38 +58,6 @@
                 ],
                 "objectKeys": []
             }
-        },
-        {
-            "name": "results",
-            "variableName": "output",
-            "description": "Results",
-            "isOutput": true,
-            "isOptional": false,
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "file",
-                "description": "",
-                "dataType": "file",
-                "extension": "json",
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            },
-            "fromRow": null,
-            "toRow": null,
-            "column": null,
-            "refModelData": null,
-            "jsonPath": null,
-            "sheet": null,
-            "delimiter": null,
-            "qualifier": null,
-            "dateFormat": null
         }
     ]
 }
