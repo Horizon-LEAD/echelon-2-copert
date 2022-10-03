@@ -1,10 +1,12 @@
-"""COPERT Interface
+"""Echelon-to-COPERT Interface
 """
 
 from sys import argv
-from os.path import exists, dirname, join
+from os import getenv
+from os.path import exists, isfile, join
 from csv import reader
-from json import load, dump
+from json import dump, dumps
+from time import time
 from argparse import (ArgumentParser, RawTextHelpFormatter,
                       ArgumentDefaultsHelpFormatter, ArgumentTypeError)
 
@@ -12,9 +14,31 @@ from dotenv import load_dotenv
 
 from logsvc import set_logging
 
-
+EPILOG="""
+environment variables:
+  CATEGORY              The category of the vehicle (default: Passenger Car)
+  FUEL                  The fuel used by the vehicle (default: Petrol)
+  SEGMENT               The segment the vehicle belongs in (default: Mini),
+  EURO_STANDARD         The EURO standard of the vehicle (default: Euro 4),
+  URBAN_OFF_PEAK_SPEED  The off-urban peak speed in kmph(default: 30.0),
+  URBAN_PEAK_SPEED      The urban peak speed in kmph (default: 15),
+  URBAN_OFF_PEAK_SHARE  The off-urban time share (default: 0.6),
+  URBAN_PEAK_SHARE      The urban time share (default: 0.4)
+"""
 MSG_FMT = "[%(asctime)s][%(levelname)-8s]\
-[%(filename)12s#L%(lineno)-4d][%(name)10s]  %(message)s"
+[%(filename)12s#L%(lineno)-3d][%(name)3s]  %(message)s"
+COPERT_VEH_PARAMS = ["CATEGORY", "FUEL", "SEGMENT", "EURO_STANDARD",
+                     "STOCK", "MEAN_ACTIVITY",
+                     "URBAN_OFF_PEAK_SPEED", "URBAN_PEAK_SPEED",
+                     "URBAN_OFF_PEAK_SHARE", "URBAN_PEAK_SHARE"]
+
+
+def strfile(path):
+    """Argparse type checking method
+    string path for file should exist"""
+    if isfile(path):
+        return path
+    raise ArgumentTypeError("Input file does not exist")
 
 
 def strdir(path):
@@ -22,7 +46,7 @@ def strdir(path):
     string path for file should exist"""
     if exists(path):
         return path
-    raise ArgumentTypeError("IO directory does not exist")
+    raise ArgumentTypeError("Input directory does not exist")
 
 
 class RawDefaultsHelpFormatter(ArgumentDefaultsHelpFormatter, RawTextHelpFormatter):
@@ -32,8 +56,8 @@ class RawDefaultsHelpFormatter(ArgumentDefaultsHelpFormatter, RawTextHelpFormatt
 def main():
     """ echelon2copert interface main
     """
-
     parser = ArgumentParser(description=__doc__,
+                            epilog=EPILOG,
                             formatter_class=RawDefaultsHelpFormatter)
 
     parser.add_argument('-v', '--verbosity', action='count',
@@ -41,42 +65,76 @@ def main():
     parser.add_argument('--env', action='store_true', default=False,
                         help='Use .env file (dev)')
 
-    parser.add_argument('directory', type=lambda x: strdir(x), default=None,
-                        help='Main directory')
-    parser.add_argument('fin', type=lambda x: strdir(x), default=None,
-                        help='Input vehicles file for COPERT')
+    parser.add_argument('CSV_IN', type=lambda x: strfile(x), default=None,
+                        help='The CSV output file from Echelon as input to the connector')
+    parser.add_argument('OUTDIR', type=strdir, help='The output directory')
 
     args = parser.parse_args(argv[1:])
 
     logger = set_logging('e2c', msg_fmt=MSG_FMT, vcount=args.verbosity)
-    logger.debug('CMD: %s', ' '.join(argv))
+    cmdargs = "".join(["\t" + item + "\n" for item in argv[1:]])[:-1]
+    logger.debug('CMD:\n%s\n%s', argv[0], cmdargs)
     logger.debug('AGRS: %s', args)
 
     if args.env:
         logger.debug('Using .env file')
         load_dotenv()
 
-    mean_activity, stock = 0, 0
-    with open(join(args.directory, "output.csv")) as fpin:
+    tick = time()
+    logger.info("Execution started")
+
+    # input setup from echelon file
+    act, stock = [], []
+    with open(args.CSV_IN, encoding='utf-8') as fpin:
         rdr = reader(fpin, delimiter=';')
         next(rdr)
-        data = next(rdr)
-        mean_activity = data[11]
-        stock = data[13]
+        for row in rdr:
+            act.append(row[11])
+            stock.append(row[13])
+    logger.debug("mean activity: %s", act)
+    logger.debug("stock        : %s", stock)
 
-    logger.debug("mean activity: %s, stock: %s", mean_activity, stock)
+    # input setup from environment
+    cat = getenv("CATEGORY", "Passenger Cars").split(',')
+    fuel = getenv("FUEL", "Petrol").split(',')
+    seg = getenv("SEGMENT", "Mini").split(',')
+    estd = getenv("EURO_STANDARD", "Euro 4").split(',')
+    uosp = getenv("URBAN_OFF_PEAK_SPEED", "30").split(',')
+    usp = getenv("URBAN_PEAK_SPEED", "15").split(',')
+    uosh = getenv("URBAN_OFF_PEAK_SHARE", "0.6").split(',')
+    ush = getenv("URBAN_PEAK_SHARE", "0.4").split(',')
 
-    data = {}
-    with open(args.fin) as fpout:
-        data = load(fpout)
+    params = [cat, fuel, seg, estd, stock, act,
+              uosp, usp, uosh, ush]
 
-    with open(args.fin, 'w') as fpout:
-        data[0]["MEAN_ACTIVITY"] = mean_activity
-        data[0]["STOCK"] = stock
-        dump(data, fpout)
+    # check length of input parameters matches
+    assert all(map(lambda item: len(item)==len(act), params)) == True,\
+        'not all input parameters have the same length'
 
-    logger.debug("data dumped: %s", data)
+    # create the output
+    data = []
+    for veh_tuple in zip(*params):
+        icat, ifuel, iseg, iestd, istock, iact, \
+            iuosp, iusp, iuosh, iush = veh_tuple
+        vehicle = {
+            "CATEGORY": icat,
+            "FUEL": ifuel,
+            "SEGMENT": iseg,
+            "EURO_STANDARD": iestd,
+            "STOCK": int(istock),
+            "MEAN_ACTIVITY": float(iact),
+            "URBAN_OFF_PEAK_SPEED": float(iuosp),
+            "URBAN_PEAK_SPEED": float(iusp),
+            "URBAN_OFF_PEAK_SHARE": float(iuosh),
+            "URBAN_PEAK_SHARE": float(iush)
+        }
+        data.append(vehicle)
 
+    with open(join(args.OUTDIR, "vehicles.json"), 'w') as fpout:
+        dump(data, fpout, indent=2)
+        logger.debug("data dumped\n%s", dumps(data, indent=2))
+
+    logger.info('Execution completed [%.3fs]', time()-tick)
 
 if __name__ == '__main__':
     main()
