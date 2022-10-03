@@ -1,6 +1,6 @@
 {
-    "name": "echelon to copert",
-    "description":"Connector",
+    "name": "Echelon-to-COPERT",
+    "description":"Echelon-to-COPERT Connector",
     "version": "0.0.1",
     "status":"draft",
     "types": [
@@ -8,21 +8,24 @@
     ],
     "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-to-copert-connector:latest",
     "url": "https://github.com/Horizon-LEAD/echelon-to-copert-connector",
+    "fromModelId": 1,
+    "toModelId": 3,
     "modelData":  [
         {
             "name": "CSV",
             "variableName": "csv",
-            "description": "echelon csv input",
+            "description": "CSV Input matching Echelon's model output",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
+            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
                 "dataType": "file",
-                "extension": null,
+                "extension": "csv",
                 "validators": [
                     {
                         "name": "required",
@@ -256,6 +259,23 @@
                         "value": ""
                     }
                 ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "Vehicles JSON",
+            "variableName": "vehicles",
+            "description": "JSON output matching the COPERT vehicles JSON input.",
+            "isOutput": true,
+            "isOptional": false,
+            "chartType": "NONE",
+            "refModelDataId": 22,
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "json",
+                "validators": [],
                 "objectKeys": []
             }
         }
