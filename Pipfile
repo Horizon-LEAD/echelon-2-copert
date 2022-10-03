@@ -4,7 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-XlsxWriter = "==3.0.3"
 python-dotenv = "==0.19.2"
 
 # Dependencies from VCS through ssh/https

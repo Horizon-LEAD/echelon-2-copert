@@ -2,7 +2,6 @@
 #
 ###### Requirements with Version Specifiers ######
 #   See https://www.python.org/dev/peps/pep-0440/#version-specifiers
-XlsxWriter==3.0.3
 python-dotenv==0.19.2
 #
 ###### Version Control ######
