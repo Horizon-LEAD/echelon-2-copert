@@ -69,11 +69,12 @@ def main():
                         help='The CSV output file from Echelon as input to the connector')
     parser.add_argument('OUTDIR', type=strdir, help='The output directory')
 
+    cmdargs = "".join(["\t" + item + "\n" for item in argv[1:]])[:-1]
+    print(f'CMD:\n{argv[0]}\n{cmdargs}')
+
     args = parser.parse_args(argv[1:])
 
     logger = set_logging('e2c', msg_fmt=MSG_FMT, vcount=args.verbosity)
-    cmdargs = "".join(["\t" + item + "\n" for item in argv[1:]])[:-1]
-    logger.debug('CMD:\n%s\n%s', argv[0], cmdargs)
     logger.debug('AGRS: %s', args)
 
     if args.env:
