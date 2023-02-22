@@ -3,7 +3,7 @@
 
 from sys import argv
 from os import getenv
-from os.path import exists, isfile, join
+from os.path import isdir, isfile, join
 from csv import reader
 from json import dump, dumps
 from time import time
@@ -44,7 +44,7 @@ def strfile(path):
 def strdir(path):
     """Argparse type checking method
     string path for file should exist"""
-    if exists(path):
+    if isdir(path):
         return path
     raise ArgumentTypeError("Input directory does not exist")
 
@@ -65,16 +65,15 @@ def main():
     parser.add_argument('--env', action='store_true', default=False,
                         help='Use .env file (dev)')
 
-    parser.add_argument('CSV_IN', type=lambda x: strfile(x), default=None,
+    parser.add_argument('CSV_IN', type=strfile, default=None,
                         help='The CSV output file from Echelon as input to the connector')
     parser.add_argument('OUTDIR', type=strdir, help='The output directory')
-
-    cmdargs = "".join(["\t" + item + "\n" for item in argv[1:]])[:-1]
-    print(f'CMD:\n{argv[0]}\n{cmdargs}')
 
     args = parser.parse_args(argv[1:])
 
     logger = set_logging('e2c', msg_fmt=MSG_FMT, vcount=args.verbosity)
+    cmdargs = "".join(["\t" + item + "\n" for item in argv])[:-1]
+    logger.debug('CMD : %s', cmdargs)
     logger.debug('AGRS: %s', args)
 
     if args.env:
@@ -109,7 +108,7 @@ def main():
               uosp, usp, uosh, ush]
 
     # check length of input parameters matches
-    assert all(map(lambda item: len(item)==len(act), params)) == True,\
+    assert all(map(lambda item: len(item)==len(act), params)),\
         'not all input parameters have the same length'
 
     # create the output
@@ -131,9 +130,11 @@ def main():
         }
         data.append(vehicle)
 
-    with open(join(args.OUTDIR, "vehicles.json"), 'w') as fpout:
+    fout = join(args.OUTDIR, "vehicles.json")
+    with open(fout, 'w', encoding='utf8') as fpout:
         dump(data, fpout, indent=2)
         logger.debug("data dumped\n%s", dumps(data, indent=2))
+    logger.info('Output created [%s]', fout)
 
     logger.info('Execution completed [%.3fs]', time()-tick)
 
