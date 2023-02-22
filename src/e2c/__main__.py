@@ -95,14 +95,14 @@ def main():
     logger.debug("stock        : %s", stock)
 
     # input setup from environment
-    cat = getenv("CATEGORY", "Passenger Cars").split(',')
-    fuel = getenv("FUEL", "Petrol").split(',')
-    seg = getenv("SEGMENT", "Mini").split(',')
-    estd = getenv("EURO_STANDARD", "Euro 4").split(',')
-    uosp = getenv("URBAN_OFF_PEAK_SPEED", "30").split(',')
-    usp = getenv("URBAN_PEAK_SPEED", "15").split(',')
-    uosh = getenv("URBAN_OFF_PEAK_SHARE", "0.6").split(',')
-    ush = getenv("URBAN_PEAK_SHARE", "0.4").split(',')
+    cat = getenv("CATEGORY", "Passenger Cars").split(';')
+    fuel = getenv("FUEL", "Petrol").split(';')
+    seg = getenv("SEGMENT", "Mini").split(';')
+    estd = getenv("EURO_STANDARD", "Euro 4").split(';')
+    uosp = getenv("URBAN_OFF_PEAK_SPEED", "30").split(';')
+    usp = getenv("URBAN_PEAK_SPEED", "15").split(';')
+    uosh = getenv("URBAN_OFF_PEAK_SHARE", "0.6").split(';')
+    ush = getenv("URBAN_PEAK_SHARE", "0.4").split(';')
 
     params = [cat, fuel, seg, estd, stock, act,
               uosp, usp, uosh, ush]
