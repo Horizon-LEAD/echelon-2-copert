@@ -108,8 +108,12 @@ def main():
               uosp, usp, uosh, ush]
 
     # check length of input parameters matches
-    assert all(map(lambda item: len(item)==len(act), params)),\
-        'not all input parameters have the same length'
+    try:
+        assert all(map(lambda item: len(item)==len(act), params)),\
+            'not all input parameters have the same length'
+    except AssertionError as exc:
+        logger.error('lens: %s', str([len(el) for el in params]))
+        raise AssertionError from exc
 
     # create the output
     data = []
