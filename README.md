@@ -61,7 +61,20 @@ e2c -vvv sample-data/input/echelon-output.csv sample-data/output/ --env
 
 # running as module
 python -m src.e2c sample-data/input/echelon-output.csv sample-data/output/ --env
+```
 
-# docker run
-docker run
+```
+docker run --rm \
+    -v $PWD/sample-data:/data \
+    --env CATEGORY="Light Commercial Vehicles" \
+    --env FUEL="Diesel" \
+    --env SEGMENT="N1-I" \
+    --env EURO_STANDARD="Euro 5" \
+    --env URBAN_OFF_PEAK_SPEED=30 \
+    --env URBAN_PEAK_SPEED=20 \
+    --env URBAN_OFF_PEAK_SHARE=0.6 \
+    --env URBAN_PEAK_SHARE=0.4 \
+    echelon-to-copert-connector:latest \
+    /data/input/echelon-output.csv \
+    /data/output
 ```
