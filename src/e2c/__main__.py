@@ -65,8 +65,11 @@ def main():
     parser.add_argument('--env', action='store_true', default=False,
                         help='Use .env file (dev)')
 
+    # FIXME - change this to json_in
     parser.add_argument('CSV_IN', type=strfile, default=None,
                         help='The CSV output file from Echelon as input to the connector')
+    # FIXME - add here vehicle json - same as copert v2 but without stock, mean_activity
+    # FIXME - add climate json - same as copert v2
     parser.add_argument('OUTDIR', type=strdir, help='The output directory')
 
     args = parser.parse_args(argv[1:])
@@ -84,6 +87,9 @@ def main():
     logger.info("Execution started")
 
     # input setup from echelon file
+    # FIXME - this should be from the JSON output of Echelon v2
+    # total_distance_km, number_of_vehicles
+    # TODO examine case of more than one elements in the list
     act, stock = [], []
     with open(args.CSV_IN, encoding='utf-8') as fpin:
         rdr = reader(fpin, delimiter=';')
@@ -95,6 +101,8 @@ def main():
     logger.debug("stock        : %s", stock)
 
     # input setup from environment
+    # FIXME - change this to JSON -> conform with vehicles JSON of copert v2
+    # but without the stock, mean activity
     cat = getenv("CATEGORY", "Passenger Cars").split(';')
     fuel = getenv("FUEL", "Petrol").split(';')
     seg = getenv("SEGMENT", "Mini").split(';')
@@ -116,6 +124,8 @@ def main():
         raise AssertionError from exc
 
     # create the output
+    # FIXME get code from ctrl of copert v2 for the creation of the xlsx file
+    # call init_xlsx
     data = []
     for veh_tuple in zip(*params):
         icat, ifuel, iseg, iestd, istock, iact, \
