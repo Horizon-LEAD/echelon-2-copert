@@ -32,23 +32,15 @@ usage: e2c [-h] [-v] [--env] CSV_IN OUTDIR
 Echelon-to-COPERT Interface
 
 positional arguments:
-  CSV_IN           The CSV output file from Echelon as input to the connector
-  OUTDIR           The output directory
+  Echelon_Output_IN           The JSON output file from Echelon as input to the connector
+  Vehicle_Json_IN             The JSON file describing the vehicles
+  Climate_Json_IN             The JSON file describing the climate
+  Year                        Year input
+  OUTDIR                      The output directory
 
 optional arguments:
   -h, --help       show this help message and exit
   -v, --verbosity  Increase output verbosity (default: 0)
-  --env            Use .env file (dev) (default: False)
-
-environment variables:
-  CATEGORY              The category of the vehicle (default: Passenger Car)
-  FUEL                  The fuel used by the vehicle (default: Petrol)
-  SEGMENT               The segment the vehicle belongs in (default: Mini),
-  EURO_STANDARD         The EURO standard of the vehicle (default: Euro 4),
-  URBAN_OFF_PEAK_SPEED  The off-urban peak speed in kmph(default: 30.0),
-  URBAN_PEAK_SPEED      The urban peak speed in kmph (default: 15),
-  URBAN_OFF_PEAK_SHARE  The off-urban time share (default: 0.6),
-  URBAN_PEAK_SHARE      The urban time share (default: 0.4)
 ```
 
 ### Examples
@@ -66,15 +58,10 @@ python -m src.e2c sample-data/input/echelon-output.csv sample-data/output/ --env
 ```
 docker run --rm \
     -v $PWD/sample-data:/data \
-    --env CATEGORY="Light Commercial Vehicles" \
-    --env FUEL="Diesel" \
-    --env SEGMENT="N1-I" \
-    --env EURO_STANDARD="Euro 5" \
-    --env URBAN_OFF_PEAK_SPEED=30 \
-    --env URBAN_PEAK_SPEED=20 \
-    --env URBAN_OFF_PEAK_SHARE=0.6 \
-    --env URBAN_PEAK_SHARE=0.4 \
     echelon-to-copert-connector:latest \
-    /data/input/echelon-output.csv \
+    /data/input/output.json \
+    /data/input/vehicles.json \
+    /data/input/climate.json \
+    2023 \
     /data/output
 ```

@@ -1,20 +1,17 @@
 {
     "name": "Echelon-to-COPERT",
     "description":"Echelon-to-COPERT Connector",
-    "version": "0.0.1",
+    "version": "1.0.0-e2c1",
     "status":"draft",
-    "types": [
-        {"name": "Connector"}
-    ],
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-to-copert-connector:latest",
-    "url": "https://github.com/Horizon-LEAD/echelon-to-copert-connector",
-    "fromModelId": 1,
-    "toModelId": 3,
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-to-copert-connector:latest-e2c1",
+    "url": "https://gitlab.com/inlecom/lead/models/echelon-to-copert-connector",
+    "fromModelId": 3,
+    "toModelId": 4,
     "modelData":  [
         {
-            "name": "CSV",
-            "variableName": "csv",
-            "description": "CSV Input matching Echelon's model output",
+            "name": "Echelon Output JSON",
+            "variableName": "echelon_json",
+            "description": "JSON Input matching Echelon's model output",
             "isOutput": false,
             "isOutputDir": false,
             "isOptional": false,
@@ -25,7 +22,7 @@
                 "name": "file",
                 "description": "",
                 "dataType": "file",
-                "extension": "csv",
+                "extension": "json",
                 "validators": [
                     {
                         "name": "required",
@@ -34,6 +31,54 @@
                         "value": ""
                     }
                 ],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "Vehicles JSON",
+            "variableName": "vehicles_json",
+            "description": "JSON describing vehicles.",
+            "isOutput": false,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "json",
+                "validators": [],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "Climate JSON",
+            "variableName": "climate_json",
+            "description": "JSON describing climate.",
+            "isOutput": false,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "file",
+                "description": "",
+                "dataType": "file",
+                "extension": "json",
+                "validators": [],
+                "objectKeys": []
+            }
+        },
+        {
+            "name": "Year",
+            "variableName": "year",
+            "description": "Year to be used for Copert input",
+            "isOutput": false,
+            "isOptional": false,
+            "chartType": "NONE",
+            "modelDataType": {
+                "name": "number",
+                "description": "number",
+                "dataType": "number",
+                "extension": null,
+                "validators": [],
                 "objectKeys": []
             }
         },
@@ -63,219 +108,26 @@
             }
         },
         {
-            "name": "CATEGORY",
-            "variableName": "CATEGORY",
-            "description": "vehicles CATEGORY as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "string",
-                "description": "",
-                "dataType": "string",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "FUEL",
-            "variableName": "FUEL",
-            "description": "vehicles FUEL as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "string",
-                "description": "",
-                "dataType": "string",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "SEGMENT",
-            "variableName": "SEGMENT",
-            "description": "vehicles SEGMENT as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "string",
-                "description": "",
-                "dataType": "string",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "EURO_STANDARD",
-            "variableName": "EURO_STANDARD",
-            "description": "vehicles EURO_STANDARD as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "string",
-                "description": "",
-                "dataType": "string",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "URBAN_OFF_PEAK_SPEED",
-            "variableName": "URBAN_OFF_PEAK_SPEED",
-            "description": "vehicles URBAN_OFF_PEAK_SPEED as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "number",
-                "description": "",
-                "dataType": "number",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "URBAN_PEAK_SPEED",
-            "variableName": "URBAN_PEAK_SPEED",
-            "description": "vehicles URBAN_PEAK_SPEED as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "number",
-                "description": "",
-                "dataType": "number",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "URBAN_OFF_PEAK_SHARE",
-            "variableName": "URBAN_OFF_PEAK_SHARE",
-            "description": "vehicles URBAN_OFF_PEAK_SHARE as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "number",
-                "description": "",
-                "dataType": "number",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "URBAN_PEAK_SHARE",
-            "variableName": "URBAN_PEAK_SHARE",
-            "description": "vehicles URBAN_PEAK_SHARE as accepted by COPERT",
-            "isOutput": false,
-            "isOutputDir": false,
-            "isOptional": false,
-            "inputType": "ENV",
-            "chartType": "NONE",
-            "modelDataType": {
-                "name": "number",
-                "description": "",
-                "dataType": "number",
-                "extension": null,
-                "validators": [
-                    {
-                        "name": "required",
-                        "description": "required",
-                        "validatorType": "required",
-                        "value": ""
-                    }
-                ],
-                "objectKeys": []
-            }
-        },
-        {
-            "name": "Vehicles JSON",
-            "variableName": "vehicles",
-            "description": "JSON output matching the COPERT vehicles JSON input.",
+            "name": "xlsx Output",
+            "variableName": "copert_input",
+            "description": "copert input",
             "isOutput": true,
+            "isOutputDir": false,
             "isOptional": false,
             "chartType": "NONE",
-            "refModelDataId": 22,
             "modelDataType": {
                 "name": "file",
                 "description": "",
                 "dataType": "file",
-                "extension": "json",
-                "validators": [],
+                "extension": "xlsx",
+                "validators": [
+                    {
+                        "name": "required",
+                        "description": "required",
+                        "validatorType": "required",
+                        "value": ""
+                    }
+                ],
                 "objectKeys": []
             }
         }
