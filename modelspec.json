@@ -1,12 +1,10 @@
 {
-    "name": "Echelon-to-COPERT",
-    "description":"Echelon-to-COPERT Connector",
-    "version": "1.0.0-e2c1",
+    "name": "Echelon-2-COPERT",
+    "description":"Echelon-2-COPERT accepts the output of Echelon model and together with more input data creates an XLSX output compatible with COPERT",
+    "version": "latest-e2c1",
     "status":"draft",
-    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-to-copert-connector:latest-e2c1",
-    "url": "https://gitlab.com/inlecom/lead/models/echelon-to-copert-connector",
-    "fromModelId": 3,
-    "toModelId": 4,
+    "dockerImage":"registry.gitlab.com/inlecom/lead/models/echelon-2-copert:latest-e2c1",
+    "url": "https://gitlab.com/inlecom/lead/models/echelon-2-copert",
     "modelData":  [
         {
             "name": "Echelon Output JSON",
@@ -17,7 +15,6 @@
             "isOptional": false,
             "inputType": "CLI",
             "chartType": "NONE",
-            "refModelDataId": 7,
             "modelDataType": {
                 "name": "file",
                 "description": "",
